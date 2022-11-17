@@ -73,6 +73,7 @@ enum Demos {
     DEMO_SLOPE_PERF, // 5
     DEMO_DRESS_TWIRL, // 6
     DEMO_SPHERE_ROTATE, //7
+    DEMO_MYDEMO,
 };
 
 static std::vector<std::string> DEMOS_STRINGS = std::vector<std::string>{
@@ -84,6 +85,7 @@ static std::vector<std::string> DEMOS_STRINGS = std::vector<std::string>{
         "DEMO_SLOPE_PERF",
         "DEMO_DRESS_TWIRL0.3",
         "SPHERE", //19
+        "MYDEMO",
 };
 
 enum PrimitiveConfiguration {
@@ -94,7 +96,8 @@ enum PrimitiveConfiguration {
     FOOT,
     NONE,
     Y0PLANE,
-    BIG_SPHERE
+    BIG_SPHERE,
+    MYMESH
 };
 
 

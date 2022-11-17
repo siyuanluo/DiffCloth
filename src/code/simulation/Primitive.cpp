@@ -5,8 +5,13 @@
 
 #include "Primitive.h"
 #include "../engine/Constants.h"
+#include "../engine/MeshFileHandler.h"
+#include <Eigen/src/Geometry/Transform.h>
+#include "../../../../fcl/test/test_fcl_utility.h"
+// #include "../../../../fcl/build/include/fcl/fcl.h"
 
-std::vector<std::string> Primitive::primitiveTypeStrings = std::vector<std::string>{"PLANE", "CUBE", "SPHERE", "CAPSULE", "PINBALL", "FOOT", "LOWER_LEG"};
+int num_max_contacts = std::numeric_limits<int>::max();
+std::vector<std::string> Primitive::primitiveTypeStrings = std::vector<std::string>{"PLANE", "CUBE", "SPHERE", "CAPSULE", "PINBALL", "FOOT", "LOWER_LEG", "BOWL", "DISK", "TABLE", "MyMESH"};
 Vec3d Primitive::gravity(0, -9.8, 0);
 
 
@@ -128,6 +133,81 @@ Plane::isInContact(const Vec3d &center_prim, const Vec3d &pos, const Vec3d &velo
   return false;
 
 };
+
+MyMesh::MyMesh(Vec3d center, double scale) : Primitive(MyMESH, center, false, COLOR_PEACH){
+  const char *filename = "/home/lvjun/DiffCloth/src/assets/meshes/my/mesh1.obj";
+  std::vector<Vec3d> posVec;
+  std::vector<Vec3i> triVec;
+  MeshFileHandler::loadOBJFile(filename, posVec, triVec);
+
+  fcl::test::loadOBJFile(filename, vertices, triangles);
+
+  for(int i=0; i<posVec.size(); i++){
+    Vec3d point = Vec3d(posVec[i][0]*scale, posVec[i][2]*scale, posVec[i][1]*scale)+center;
+    points.emplace_back(1, point, point, Vec3d(0, 0, 0), Vec2i(0, 0), i);
+    vertices[i] = point;
+  }
+  for(int i=0; i<triVec.size(); i++){
+    mesh.emplace_back(triVec[i][0], triVec[i][1], triVec[i][2], points);
+    mesh[i].overrideColor = true;
+    mesh[i].color = COLOR_PEACH;
+  }
+
+  for (Particle &p : points) {
+    p.normal.setZero();
+  }
+  for (Triangle &t : mesh) {
+    t.normal = t.getNormal(t.p0()->pos, t.p1()->pos, t.p2()->pos);
+    t.p0()->normal += t.normal;
+    t.p1()->normal += t.normal;
+    t.p2()->normal += t.normal;
+  }
+  for (Particle &p : points) {
+    p.normal.normalize();
+  }
+
+  typedef fcl::BVHModel<fcl::OBBRSSd> Model;
+  std::shared_ptr<Model> model = std::make_shared<Model>();
+
+  model->beginModel();
+  model->addSubModel(vertices, triangles);
+  model->endModel();
+
+  fcl::Transform3d pose1 = fcl::Transform3d::Identity();
+  obj1 = new fcl::CollisionObjectd(model, pose1);
+}
+
+
+bool
+MyMesh::isInContact(const Vec3d &center_prim, const Vec3d &pos, const Vec3d &velocity, Vec3d &normal, double &dist,
+                     Vec3d &v_out) {
+  double COLLISION_EPSILON = 0.1;
+
+  fcl::Transform3d pose2 = fcl::Transform3d::Identity();
+  pose2.translation() = pos - center_prim;
+
+  std::shared_ptr<fcl::Sphered> sphere = std::make_shared<fcl::Sphered>(COLLISION_EPSILON);
+  fcl::CollisionObjectd* obj2 = new fcl::CollisionObjectd(sphere, pose2);
+
+  fcl::CollisionRequestd request(num_max_contacts, true);
+  fcl::CollisionResultd result;
+  int ret = fcl::collide(obj1, obj2, request, result);
+
+  if(ret){
+    std::cout<<ret<<" ";
+    std::vector<fcl::Contactd> contacts;
+    result.getContacts(contacts);
+    for(int i=0; i<contacts.size(); i++){
+      normal += contacts[i].normal;
+    }
+    normal.normalize();
+    // normal = Vec3d(0,1,0);
+    v_out = this->velocity;
+    return true;
+  }
+  return false;
+}
+
 
 
 Sphere::Sphere(Vec3d c, double radius, Vec3d myColor, int resolution, bool discretized) : Primitive(SPHERE, c, false, myColor),

@@ -113,7 +113,7 @@ int main(int argc, char *argv[]) {
   };
 
   std::vector<std::string> validModes = {"optimize", "visualize"};
-  std::vector<std::string> validDemos = {"tshirt", "sock", "hat", "sphere", "dress"};
+  std::vector<std::string> validDemos = {"tshirt", "sock", "hat", "sphere", "dress", "mydemo"};
   char *modeStr = getCmdOption(argv, argv + argc, "-mode");
   char *demoNameStr = getCmdOption(argv, argv + argc, "-demo");
   char *randSeedStr = getCmdOption(argv, argv + argc, "-seed");
@@ -139,6 +139,8 @@ int main(int argc, char *argv[]) {
       demo = Demos::DEMO_SPHERE_ROTATE;
     } else if (demoName == "dress") {
       demo = Demos::DEMO_DRESS_TWIRL;
+    } else if (demoName == "mydemo") {
+      demo = Demos::DEMO_MYDEMO;
     }
      if (mode == "visualize") {
       checkCmdOptionExistsAndValid("-exp", expStr, {});

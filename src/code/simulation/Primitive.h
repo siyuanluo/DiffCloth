@@ -10,11 +10,13 @@
 #include <Eigen/src/Geometry/Transform.h>
 #include "../engine/UtilityFunctions.h"
 #include "../engine/Constants.h"
+#include "../../../../fcl/test/test_fcl_utility.h"
+
 
 class Primitive {
 public:
     enum PrimitiveType {
-        PLANE, CUBE, SPHERE, CAPSULE, PINBALL, FOOT, LOWER_LEG, BOWL, DISK, TABLE
+        PLANE, CUBE, SPHERE, CAPSULE, PINBALL, FOOT, LOWER_LEG, BOWL, DISK, TABLE, MyMESH
     };
 
     std::vector<Primitive *> primitives;
@@ -402,6 +404,21 @@ public:
                      double &dist, Vec3d &v_out) override;
 
     bool sphereIsInContact(const Vec3d &center_prim, const Vec3d &sphereCenter, double sphereRadius);
+    void step(double timeStep) override {
+      center += timeStep * velocity;
+    }
+};
+
+class MyMesh : public Primitive {
+public:
+    std::vector<fcl::Vector3d> vertices;
+    std::vector<fcl::Triangle> triangles;
+    fcl::CollisionObjectd* obj1;
+    MyMesh(Vec3d center, double scale);
+
+    bool isInContact(const Vec3d &center_prim, const Vec3d &pos, const Vec3d &velocity, Vec3d &normal,
+                     double &dist, Vec3d &v_out) override;
+
     void step(double timeStep) override {
       center += timeStep * velocity;
     }

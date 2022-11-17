@@ -4,6 +4,7 @@ Testing
 install_manifest.txt
 compile_commands.json
 _deps
+output
 cmake_build_debug
 cmake-build-release
 cmake-build-debug/external/nanogui/*

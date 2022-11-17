@@ -1851,6 +1851,11 @@ void Simulation::initScene() {
       break;
     }
 
+    case MYMESH: {
+      primitives.push_back(&mymesh);
+      break;
+    }
+
 
 
     case NONE:
@@ -1921,6 +1926,12 @@ void Simulation::initScene() {
       sockLeg.mu = 0;
       sockLeg.center = sockLeg.centerInit = centerHighPoint + Vec3d(0, 3, -4);
 
+      break;
+    }
+
+    case MYMESH: {
+      mymesh.mu = 0.2;
+      mymesh.center = mymesh.centerInit= Vec3d(0, 3.7, 0.4);
       break;
     }
 

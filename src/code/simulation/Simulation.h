@@ -424,6 +424,7 @@ public:
     Capsule body, neck, head, leftUpperArm, rightUpperArm, leftLowerArm, rightLowerArm;
     Plane plane1, slope;
     Sphere slopeGoal;
+    MyMesh mymesh;
     bool explosionEncountered;
     Timer timeSteptimer;
 
@@ -472,6 +473,7 @@ public:
             sphereForFixedPointRender(Vec3d(0, 0, 0), 0.07, Vec3d(0.5, 0.5, 0), 6),
             plane1(Vec3d(0, 0, 5), Vec3d(-10, 0, -4), Vec3d(10, 0, -4), COLOR_GRAY50),
             slope(Vec3d(0, -11, 10), Vec3d(-8, -1, -1), Vec3d(8, -1, -1), COLOR_GRAY50),
+            mymesh(Vec3d(0.0, 0.5, -8.0), 1.0),
             printVerbose(true) {
 
       loadSceneMeshes();

@@ -71,6 +71,23 @@ void BackwardTaskSolver::setLossFunctionInformationAndType(LossType &lossType, S
       break;
     }
 
+    case DEMO_MYDEMO: {
+      Vec3d bustCenter =
+              system->sphere_head.center + Vec3d(0, system->sphere_head.radius * 0.6, 0);
+      Vec3d hatCenter = (system->restShapeMinDim + system->restShapeMaxDim) * 0.5;
+      Vec3d translation = bustCenter - hatCenter;
+      lossInfo.targetFrameShape.emplace_back(system->sceneConfig.stepNum, VecXd(system->particles.size() * 3));
+      VecXd hatTargetPos(system->particles.size() * 3);
+      std::vector<Vec3d> hatOnBust = MeshFileHandler::loadPosFile_txt(
+              "my/mesh4_target.txt");
+      for (int i = 0; i < system->particles.size(); i++) {
+        hatTargetPos.segment(i * 3, 3) = hatOnBust[i];
+      }
+      lossInfo.targetFrameShape[0].second = hatTargetPos;
+      system->debugShapeTargetPos = lossInfo.targetFrameShape;
+      lossInfo.targetTranslation = translation;
+      break;
+    }
 
     case DEMO_WEAR_SOCK: {
       Capsule &foot = *(system->sockLeg.foot);
@@ -170,7 +187,6 @@ void BackwardTaskSolver::setInitialConditions(int demoNum, Simulation *system,
       paramGroundtruth.f_extwind.segment(0, 3) = Vec3d(1, 0.1, 1.0).normalized() * 0.1  * 0.15;
       paramGroundtruth.f_extwind[3] = 10;
       paramGroundtruth.f_extwind[4] = 0.5;
-
       break;
     }
 
@@ -194,8 +210,8 @@ void BackwardTaskSolver::setInitialConditions(int demoNum, Simulation *system,
 
 
     case DEMO_WEAR_HAT:
-    case DEMO_WEAR_SOCK:
- {
+    case DEMO_MYDEMO:
+    case DEMO_WEAR_SOCK: {
       system->setWindAncCollision(false, true, true);
       taskInfo.dL_dcontrolPoints = true;
       resetSplineConfigsForControlTasks(demoNum, system,  paramGroundtruth);

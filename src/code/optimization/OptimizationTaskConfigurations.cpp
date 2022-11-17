@@ -145,6 +145,22 @@ Simulation::FabricConfiguration OptimizationTaskConfigurations::agenthat579 = {
         .name =  "remeshed/agenthat2-579-rotated.obj",
 };
 
+Simulation::FabricConfiguration OptimizationTaskConfigurations::myfabric = {
+        .clothDimX = 6,
+        .clothDimY = 6,
+        .k_stiff_stretching = 300, // old param: 300 // TODO: WARNING: change back to 1200
+        .k_stiff_bending = 0.1, // old param: 50 // TODO: WARNING: change back to 120
+        .gridNumX = 40, //
+        .gridNumY = 80, //
+        .density = 0.224, // old param: 0.324
+        .keepOriginalScalePoint = false,
+        .isModel = true,
+        .custominitPos = false,
+        .fabricIdx = FabricEnumArray::AGENT_HAT579,
+        .color = Vec3d(0, 1, 0),
+        .name =  "my/mesh4.obj",
+};
+
 Simulation::FabricConfiguration OptimizationTaskConfigurations::sock482 = {
         .clothDimX = 5,
         .clothDimY = 5,
@@ -181,6 +197,25 @@ Simulation::SceneConfiguration OptimizationTaskConfigurations::hatScene = {
         .forwardConvergenceThresh = 1e-8,
         .backwardConvergenceThresh = 5e-4,
         .name = "demo_wearhat"
+
+};
+
+Simulation::SceneConfiguration OptimizationTaskConfigurations::myScene = {
+        .fabric = myfabric,
+        .orientation =  Orientation::FRONT,
+        .attachmentPoints =  AttachmentConfigs::CUSTOM_ARRAY,
+        .customAttachmentVertexIdx = {{0.0, {10, 15}}},  //{{0.0, {501}}},
+        .trajectory = TrajectoryConfigs::CORNERS_2_WEARHAT,
+        .primitiveConfig = PrimitiveConfiguration::MYMESH,
+        .windConfig = WindConfig::NO_WIND,
+        .camPos = Vec3d(-22.14, 9.24, 7.59),
+        .camFocusPointType =  CameraFocusPointType::CLOTH_CENTER,
+        .sceneBbox =  AABB(Vec3d(-5, -1.5, -14), Vec3d(7, 10, 5)),
+        .timeStep = 1.0 / 100.0,
+        .stepNum = 400,
+        .forwardConvergenceThresh = 1e-8,
+        .backwardConvergenceThresh = 5e-4,
+        .name = "mydemo"
 
 };
 
@@ -408,6 +443,13 @@ Simulation::TaskConfiguration OptimizationTaskConfigurations::demoDress = {
         .lossType = LossType::DRESS_ANGLE
 };
 
+Simulation::TaskConfiguration OptimizationTaskConfigurations::demoMydemo = {
+        .scene = myScene,
+        .hasGroundtruth = false,
+        .generateGroundtruthSimulation = false,
+        .lossType = LossType::MATCHSHAPE_WITH_TRANSLATION
+};
+
 
 std::map<int, Simulation::TaskConfiguration> OptimizationTaskConfigurations::demoNumToConfigMap = {
         {DEMO_WIND,          OptimizationTaskConfigurations::demoWInd},
@@ -418,6 +460,7 @@ std::map<int, Simulation::TaskConfiguration> OptimizationTaskConfigurations::dem
         {DEMO_WEAR_SOCK,     OptimizationTaskConfigurations::demoSock},
         {DEMO_SLOPE_PERF,    OptimizationTaskConfigurations::demoSlope},
         {DEMO_DRESS_TWIRL,   OptimizationTaskConfigurations::demoDress},
+        {DEMO_MYDEMO,        OptimizationTaskConfigurations::demoMydemo},
 };
 
 std::vector<Simulation::SceneConfiguration>  OptimizationTaskConfigurations::sceneConfigArrays = {windScene,
