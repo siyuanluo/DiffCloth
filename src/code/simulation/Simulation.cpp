@@ -275,7 +275,9 @@ Simulation::collisionDetection(const VecXd &x_n, const VecXd &v, const VecXd &x_
     timeSteptimer.toc();
 
 
-    if (selfcollisionEnabled) {
+    if (selfcollisionEnabled) 
+    //if (false)
+    {
       timeSteptimer.tic("SelfColDetectInit");
       Vec3d maxDim = particles[0].pos, minDim = particles[0].pos;
       double maxRadii = particles[0].radii;
@@ -1095,7 +1097,9 @@ void Simulation::step() {
   r.setZero();
 
   double windFactor = fillForces(f_int, f_ext, v_n, x_n, returnRecord.t);
-  s_n = x_n + sceneConfig.timeStep * v_n + sceneConfig.timeStep * sceneConfig.timeStep * M_inv * f_ext;
+    //std::cout << x_n.transpose() << "/////" << v_n.transpose() << std::endl;
+    s_n = x_n + sceneConfig.timeStep * v_n; + sceneConfig.timeStep * sceneConfig.timeStep * M_inv * f_ext;
+    //std::cout << s_n.transpose() << std::endl;
 
   returnRecord.x_prev = x_n;
   returnRecord.v_prev = v_n;
@@ -1170,7 +1174,8 @@ void Simulation::step() {
     b.setZero();
     double newEnergy = 0;
     curEnergy = 1000000;
-    double min_xdiff = ((s_n - x_n).norm() * (1.0 / particles.size()));
+      //std::cout << s_n.transpose()  << std::endl << x_n.transpose() << std::endl;
+    double min_xdiff = ((s_n - x_n).norm() / particles.size());
     int min_xdiffiter = 0;
 
     VecXd M_times_sn = M * s_n;
@@ -1266,6 +1271,8 @@ void Simulation::step() {
           timeSteptimer.tic("solve and update");
           v_new = sysMat[currentSysmatId].solver.solve(b_tilde + r);
           x_new = v_new * sceneConfig.timeStep + x_n;
+            //std::cout << b_tilde.transpose() << "\n\n/////" << r.transpose() << std::endl;
+
 
           timeSteptimer.toc();
 
@@ -1321,7 +1328,8 @@ void Simulation::step() {
       }
 
       timeSteptimer.tic("Convergence Test and Cleanup");
-      double x_diff = ((x_new - x_now).norm() * (1.0 / particles.size()));
+      //std::cout << x_new.transpose() << std::endl;
+      double x_diff = ((x_new - x_now).norm() / particles.size());
       if (x_diff < min_xdiff) {
         min_xdiff = x_diff;
         min_xdiffiter = iterIdx;
@@ -2924,12 +2932,15 @@ void Simulation::updateAreaMatrix() {
     area_per_particles[i2] += A_avg;
   }
 
-  for (Particle &p : particles) {
-    p.area = area_per_particles[p.idx];
+  double min_area = 1e-30;
+  for (Particle &p : particles) {  
+    p.area = (min_area > area_per_particles[p.idx]) ? min_area : area_per_particles[p.idx];
+      //if(p.area == 0.0)
+        //std::cout << "area bug" << std::endl;
     for (int dim = 0; dim < 3; dim++) {
       int i0 = 3 * p.idx + dim;
-      triplets.emplace_back(i0, i0, area_per_particles[p.idx]);
-      tripletsInv.emplace_back(i0, i0, 1.0 / area_per_particles[p.idx]);
+      triplets.emplace_back(i0, i0, p.area);
+      tripletsInv.emplace_back(i0, i0, 1.0 / p.area);
     }
   }
 
