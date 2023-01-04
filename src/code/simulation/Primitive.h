@@ -10,7 +10,7 @@
 #include <Eigen/src/Geometry/Transform.h>
 #include "../engine/UtilityFunctions.h"
 #include "../engine/Constants.h"
-#include "../../../../fcl/test/test_fcl_utility.h"
+#include "../../../fcl/test/test_fcl_utility.h"
 
 
 class Primitive {

@@ -145,20 +145,36 @@ Simulation::FabricConfiguration OptimizationTaskConfigurations::agenthat579 = {
         .name =  "remeshed/agenthat2-579-rotated.obj",
 };
 
+// Simulation::FabricConfiguration OptimizationTaskConfigurations::myfabric = {
+//         .clothDimX = 6,
+//         .clothDimY = 6,
+//         .k_stiff_stretching = 300, // old param: 300 // TODO: WARNING: change back to 1200
+//         .k_stiff_bending = 0.1, // old param: 50 // TODO: WARNING: change back to 120
+//         .gridNumX = 40, //
+//         .gridNumY = 80, //
+//         .density = 0.224, // old param: 0.324
+//         .keepOriginalScalePoint = false,
+//         .isModel = true,
+//         .custominitPos = false,
+//         .fabricIdx = FabricEnumArray::AGENT_HAT579,
+//         .color = Vec3d(0, 1, 0),
+//         .name =  "my/tie-1+.obj",
+// };
+
 Simulation::FabricConfiguration OptimizationTaskConfigurations::myfabric = {
         .clothDimX = 6,
         .clothDimY = 6,
-        .k_stiff_stretching = 300, // old param: 300 // TODO: WARNING: change back to 1200
-        .k_stiff_bending = 0.1, // old param: 50 // TODO: WARNING: change back to 120
-        .gridNumX = 40, //
-        .gridNumY = 80, //
-        .density = 0.224, // old param: 0.324
+        .k_stiff_stretching = 100, // old param: 300 // TODO: WARNING: change back to 1200
+        .k_stiff_bending = 0.01, // old param: 50 // TODO: WARNING: change back to 120
+        .gridNumX = 25, //
+        .gridNumY = 25, //
+        .density = 0.054, // old param: 0.324
         .keepOriginalScalePoint = false,
         .isModel = true,
         .custominitPos = false,
-        .fabricIdx = FabricEnumArray::AGENT_HAT579,
-        .color = Vec3d(0, 1, 0),
-        .name =  "my/mesh4.obj",
+        .fabricIdx = FabricEnumArray::NORMAL,
+        .color = COLOR_EGGPLANT,
+        .name =  "my/tie-1+.obj",
 };
 
 Simulation::FabricConfiguration OptimizationTaskConfigurations::sock482 = {
@@ -200,24 +216,45 @@ Simulation::SceneConfiguration OptimizationTaskConfigurations::hatScene = {
 
 };
 
-Simulation::SceneConfiguration OptimizationTaskConfigurations::myScene = {
-        .fabric = myfabric,
-        .orientation =  Orientation::FRONT,
-        .attachmentPoints =  AttachmentConfigs::CUSTOM_ARRAY,
-        .customAttachmentVertexIdx = {{0.0, {10, 15}}},  //{{0.0, {501}}},
-        .trajectory = TrajectoryConfigs::CORNERS_2_WEARHAT,
-        .primitiveConfig = PrimitiveConfiguration::MYMESH,
-        .windConfig = WindConfig::NO_WIND,
-        .camPos = Vec3d(-22.14, 9.24, 7.59),
-        .camFocusPointType =  CameraFocusPointType::CLOTH_CENTER,
-        .sceneBbox =  AABB(Vec3d(-5, -1.5, -14), Vec3d(7, 10, 5)),
-        .timeStep = 1.0 / 100.0,
-        .stepNum = 400,
-        .forwardConvergenceThresh = 1e-8,
-        .backwardConvergenceThresh = 5e-4,
-        .name = "mydemo"
+// Simulation::SceneConfiguration OptimizationTaskConfigurations::myScene = {
+//         .fabric = myfabric,
+//         .orientation =  Orientation::FRONT,
+//         .attachmentPoints =  AttachmentConfigs::CUSTOM_ARRAY,
+//         .customAttachmentVertexIdx = {{0.0, {10, 15}}},  //{{0.0, {501}}},
+//         .trajectory = TrajectoryConfigs::CORNERS_2_WEARHAT,
+//         //.primitiveConfig = PrimitiveConfiguration::MYMESH,
+//         .primitiveConfig = PrimitiveConfiguration::NONE,
+//         .windConfig = WindConfig::NO_WIND,
+//         .camPos = Vec3d(-22.14, 9.24, 7.59),
+//         .camFocusPointType =  CameraFocusPointType::CLOTH_CENTER,
+//         .sceneBbox =  AABB(Vec3d(-5, -1.5, -14), Vec3d(7, 10, 5)),
+//         .timeStep = 1.0 / 100.0,
+//         .stepNum = 400,
+//         .forwardConvergenceThresh = 1e-8,
+//         .backwardConvergenceThresh = 5e-4,
+//         .name = "mydemo"
 
+// };
+Simulation::SceneConfiguration OptimizationTaskConfigurations::myScene = {  
+       .fabric = myfabric,
+       .orientation = Orientation::FRONT,
+       //.attachmentPoints = AttachmentConfigs::NO_ATTACHMENTS,
+       .attachmentPoints =  AttachmentConfigs::CUSTOM_ARRAY,
+       .customAttachmentVertexIdx = {{0.0, {10, 15}}},
+       .trajectory = TrajectoryConfigs::NO_TRAJECTORY,
+       .primitiveConfig = PrimitiveConfiguration::NONE,
+       .windConfig = WindConfig::NO_WIND,
+       .camPos =  Vec3d(10.38, 4.243, 12.72),
+       .camFocusPos = Vec3d(0, 0, 0),
+       .camFocusPointType = CameraFocusPointType::CLOTH_CENTER,
+       .sceneBbox =  AABB(Vec3d(-7, -7, -7), Vec3d(7, 7, 7)),
+       .timeStep = 1.0 / 100.0,
+       .stepNum = 400,
+       .forwardConvergenceThresh = 1e-8,
+       .backwardConvergenceThresh = 5e-4,
+       .name = "mydemo"
 };
+
 
 
 Simulation::SceneConfiguration OptimizationTaskConfigurations::continousNormalScene = {

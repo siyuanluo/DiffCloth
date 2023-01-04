@@ -79,7 +79,7 @@ void BackwardTaskSolver::setLossFunctionInformationAndType(LossType &lossType, S
       lossInfo.targetFrameShape.emplace_back(system->sceneConfig.stepNum, VecXd(system->particles.size() * 3));
       VecXd hatTargetPos(system->particles.size() * 3);
       std::vector<Vec3d> hatOnBust = MeshFileHandler::loadPosFile_txt(
-              "my/mesh4_target.txt");
+              "my/mesh2_target.txt");
       for (int i = 0; i < system->particles.size(); i++) {
         hatTargetPos.segment(i * 3, 3) = hatOnBust[i];
       }

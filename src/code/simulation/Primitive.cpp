@@ -7,7 +7,7 @@
 #include "../engine/Constants.h"
 #include "../engine/MeshFileHandler.h"
 #include <Eigen/src/Geometry/Transform.h>
-#include "../../../../fcl/test/test_fcl_utility.h"
+#include "../../../fcl/test/test_fcl_utility.h"
 // #include "../../../../fcl/build/include/fcl/fcl.h"
 
 int num_max_contacts = std::numeric_limits<int>::max();
@@ -135,7 +135,7 @@ Plane::isInContact(const Vec3d &center_prim, const Vec3d &pos, const Vec3d &velo
 };
 
 MyMesh::MyMesh(Vec3d center, double scale) : Primitive(MyMESH, center, false, COLOR_PEACH){
-  const char *filename = "/home/lvjun/DiffCloth/src/assets/meshes/my/mesh1.obj";
+  const char *filename = "/home/siyuan/future-phd/DiffCloth/src/assets/meshes/my/mesh1.obj";
   std::vector<Vec3d> posVec;
   std::vector<Vec3i> triVec;
   MeshFileHandler::loadOBJFile(filename, posVec, triVec);
